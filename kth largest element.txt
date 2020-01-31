@@ -1,0 +1,51 @@
+Divide and Conquer
+Choose a pivot element in the array. Put everything less than pivot value into left side, everything greater than pivot value into right side. When swapping elements, pivot's position is unchagned during that phase, left and right value indicates how many elements are greater/less than pivot value. At the end of swap, left will be larger than right so be aware when entering next recursion. If there is a value between left and right, then it is the result value.
+
+
+public class Solution {
+    /**
+     * @param n: An integer
+     * @param nums: An array
+     * @return: the Kth largest element
+     */
+    public int kthLargestElement(int n, int[] nums) {
+        if(nums.length <= 0 || nums == null || n < 1 || n > nums.length) return -1;
+        return divideNConquer(nums, 0, nums.length - 1, nums.length - n);
+    }
+    
+    public int divideNConquer(int[] nums, int start, int end, int n){
+        if(start >= end){
+            return nums[n];
+        }
+        int left = start;
+        int right = end;
+        int pivot = nums[(right + left) / 2];
+        while(left <= right){
+            while(left <= right && nums[left] < pivot){
+                left++;
+            }
+            while(left <= right && nums[right] > pivot){
+                right--;
+            }
+            if(left <= right){
+                swap(nums, left, right);
+                left++;
+                right--;
+            }
+        }
+        if(n <= right){
+            return divideNConquer(nums, start, right, n);
+        }
+        if(n >= left){
+            return divideNConquer(nums, left, end, n);
+        }
+        return nums[n];
+    }
+    
+    public void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
